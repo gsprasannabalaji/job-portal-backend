@@ -7,7 +7,6 @@ const swaggerFile = require('./swagger-output.json');
 const routes = require('./routes');
 
 const app = express();
-// const port = 3000
 const bodyParser = require('body-parser');
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -20,9 +19,6 @@ app.use(function(req, res, next) {
     next();
 });
 
-// configure the routers
-// app.use('/user/getAll', getUsersRouter);
-// app.use('/user/)
 app.use(routes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
