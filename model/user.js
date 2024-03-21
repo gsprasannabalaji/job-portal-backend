@@ -14,7 +14,14 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    images: [
+        {
+          path: {
+            type: String,
+          },
+        }
+      ]
 }, { collection: 'userDetails', versionKey: false });
 
 const User = model('User', userSchema);

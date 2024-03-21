@@ -31,15 +31,20 @@ router.get("/getAll", async (req, res) => {
       } 
   */
   try {
-    const result = await User.find();
+    const result = await User.find({}, {images: 0});
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ message: error.message || "Internal Server Error"});
+    res.status(500).json({ message: error.message || "Internal Server Error" });
   }
 });
 
-router.post("/create", validateEmail, validatePassword, validateFullName, async (req, res) => {
-  /* 
+router.post(
+  "/create",
+  validateEmail,
+  validatePassword,
+  validateFullName,
+  async (req, res) => {
+    /* 
       #swagger.tags = ['Users']
       #swagger.summary = 'Create a new user'
       #swagger.description = 'Creates a new user with full name, email, and password. Includes validation for email and enforces strong password rules.'
@@ -81,32 +86,40 @@ router.post("/create", validateEmail, validatePassword, validateFullName, async 
             }
       }
   */
-  try {
-    const { fullName, email, password } = req.body;
-    const existingUser = await User.findOne({ email: email });
-    if (existingUser) {
-      return res
-        .status(400)
-        .json({ message: "User with this email already exists" });
+    try {
+      const { fullName, email, password } = req.body;
+      const existingUser = await User.findOne({ email: email });
+      if (existingUser) {
+        return res
+          .status(400)
+          .json({ message: "User with this email already exists" });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const user = new User({
+        fullName: fullName,
+        email: email,
+        password: hashedPassword,
+      });
+
+      await user.save();
+
+      res.status(201).json({ message: "User created successfully" });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: error.message || "Internal Server Error" });
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({
-      fullName: fullName,
-      email: email,
-      password: hashedPassword,
-    });
-
-    await user.save();
-
-    res.status(201).json({ message: "User created successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message || "Internal Server Error"});
   }
-});
+);
 
-router.put("/edit", validateEmail, validatePassword, validateFullName, async (req, res) => {
-  /* 
+router.put(
+  "/edit",
+  validateEmail,
+  validatePassword,
+  validateFullName,
+  async (req, res) => {
+    /* 
       #swagger.tags = ['Users']
       #swagger.summary = 'Update user details'
       #swagger.description = 'Updates an existing user's full name and password based on the provided email. Email cannot be updated.'
@@ -147,20 +160,23 @@ router.put("/edit", validateEmail, validatePassword, validateFullName, async (re
             }
       }
   */
-  try {
-    const reqObj = { email: req.body.email };
-    const user = await User.findOne(reqObj);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    try {
+      const reqObj = { email: req.body.email };
+      const user = await User.findOne(reqObj);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      const updatedUser = await User.findOneAndUpdate(reqObj, req.body, {
+        new: true,
+      });
+      res.status(200).json({ message: "User updated successfully" });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: error.message || "Internal Server Error" });
     }
-    const updatedUser = await User.findOneAndUpdate(reqObj, req.body, {
-      new: true,
-    });
-    res.status(200).json({ message: "User updated successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message || "Internal Server Error"});
   }
-});
+);
 
 router.delete("/delete", async (req, res) => {
   /* 
@@ -210,7 +226,7 @@ router.delete("/delete", async (req, res) => {
     await User.deleteOne(reqObj);
     res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message || "Internal Server Error"});
+    res.status(500).json({ message: error.message || "Internal Server Error" });
   }
 });
 
@@ -226,8 +242,20 @@ const storage = multer.diskStorage({
     fs.mkdirSync(userFolderPath, { recursive: true });
     cb(null, userFolderPath);
   },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
+  filename: async function (req, file, cb) {
+    try {
+      // Check if the file already exists in the database
+      const isFileNameExist = await User.findOne({'email': req.body.email, 'images': { $elemMatch: { 'path': `images/${req.body.email}/${file.originalname}` }}}, 'email images');
+      if (isFileNameExist) {
+        // File already exists, return an error
+        cb(new Error("Image with this filename is already exist. Please try with new filename"));
+      } else {
+        cb(null, file.originalname);
+      }
+    } catch (err) {
+      cb(err, null);
+    }
+    
   },
 });
 
@@ -302,13 +330,20 @@ router.post("/uploadImage", async function (req, res) {
       if (!req.file) {
         return res.status(400).json({ message: "Image is required!" });
       }
+      const queryObj = { email: req.body.email };
+      const user = await User.find(queryObj);
+      if(user) {
+        await User.updateOne(queryObj, { $push: {images: {
+          path: req.file.path
+        }}})
+      }
       res.status(200).json({
         message: "Image uploaded successfully",
         imagePath: req.file.path,
       });
     });
   } catch (error) {
-    res.status(500).json({ message: error.message || "Internal Server Error"});
+    res.status(500).json({ message: error.message || "Internal Server Error" });
   }
 });
 
