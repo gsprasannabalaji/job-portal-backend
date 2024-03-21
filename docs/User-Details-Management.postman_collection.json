@@ -1,0 +1,146 @@
+{
+	"info": {
+		"_postman_id": "11343f11-9e2d-4b87-a3f3-48b8b681e392",
+		"name": "User-Details-Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32754364"
+	},
+	"item": [
+		{
+			"name": "getAll",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host-rul}}/user/getAll",
+					"host": [
+						"{{host-rul}}"
+					],
+					"path": [
+						"user",
+						"getAll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fullName\": \"mango\",\n    \"password\": \"Qwerty@12345\",\n    \"email\": \"test12@northeastern.edu\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host-rul}}/user/create",
+					"host": [
+						"{{host-rul}}"
+					],
+					"path": [
+						"user",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fullName\": \"apple1\",\n    \"email\": \"test12@northeastern.edu\",\n    \"password\": \"kabdcedWerty@12345!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host-rul}}/user/edit",
+					"host": [
+						"{{host-rul}}"
+					],
+					"path": [
+						"user",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete user",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host-rul}}/user/delete?email=test12@northeastern.edu",
+					"host": [
+						"{{host-rul}}"
+					],
+					"path": [
+						"user",
+						"delete"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "test12@northeastern.edu"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "file upload",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "test4@northeastern.edu",
+							"contentType": "",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/Users/prasanna/Documents/leetcode-achievement.png"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host-rul}}/user/uploadImage",
+					"host": [
+						"{{host-rul}}"
+					],
+					"path": [
+						"user",
+						"uploadImage"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
