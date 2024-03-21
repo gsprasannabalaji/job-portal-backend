@@ -166,7 +166,12 @@ router.put(
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      const updatedUser = await User.findOneAndUpdate(reqObj, req.body, {
+      const hashedPassword = await bcrypt.hash(req?.body?.password, 10);
+      await User.findOneAndUpdate(reqObj, {
+        email: req.body.email,
+        fullName: req.body.fullName,
+        password: hashedPassword
+      }, {
         new: true,
       });
       res.status(200).json({ message: "User updated successfully" });
