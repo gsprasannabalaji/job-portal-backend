@@ -2,8 +2,8 @@ const swaggerAutogen  = require('swagger-autogen');
 
 const doc = {
   info : {
-    title: 'My API',
-    description: 'REST API for CRUD operations using express.js',
+    title: 'User Management',
+    description: 'REST API for CRUD operations to manage users data using express.js',
   },
   host : 'localhost:3000',
   schemes : ['http'],

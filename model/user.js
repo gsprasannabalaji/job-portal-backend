@@ -15,7 +15,7 @@ const userSchema = new Schema({
         type: String,
         required: true
     }
-}, { collection: 'userDetails' });
+}, { collection: 'userDetails', versionKey: false });
 
 const User = model('User', userSchema);
 
