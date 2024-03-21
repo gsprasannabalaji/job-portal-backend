@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const validateEmail = require("../middlewares/validateEmail");
 const validatePassword = require("../middlewares/validatePassword");
 const fs = require("fs");
+const validateFullName = require("../middlewares/validateFullName");
 
 router.get("/getAll", async (req, res) => {
   /* 
@@ -24,19 +25,20 @@ router.get("/getAll", async (req, res) => {
       }
       #swagger.responses[500] = {
             description: 'Internal Server Error',
+            schema: {
+              "message": "Internal Server Error"
+            }
       } 
   */
   try {
-    console.log("GET ALL");
     const result = await User.find();
-    console.log("result", result);
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ message: error.message || "Internal Server Error"});
   }
 });
 
-router.post("/create", validateEmail, validatePassword, async (req, res) => {
+router.post("/create", validateEmail, validatePassword, validateFullName, async (req, res) => {
   /* 
       #swagger.tags = ['Users']
       #swagger.summary = 'Create a new user'
@@ -74,13 +76,14 @@ router.post("/create", validateEmail, validatePassword, async (req, res) => {
       } 
       #swagger.responses[500] = {
             description: 'Internal Server Error',
+            schema: {
+              "message": "Internal Server Error"
+            }
       }
   */
   try {
-    console.log("POST CREATE " + JSON.stringify(req.body));
     const { fullName, email, password } = req.body;
     const existingUser = await User.findOne({ email: email });
-    console.log("POST CREATE in ---> " + existingUser);
     if (existingUser) {
       return res
         .status(400)
@@ -98,11 +101,11 @@ router.post("/create", validateEmail, validatePassword, async (req, res) => {
 
     res.status(201).json({ message: "User created successfully" });
   } catch (error) {
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ message: error.message || "Internal Server Error"});
   }
 });
 
-router.put("/edit", async (req, res) => {
+router.put("/edit", validateEmail, validatePassword, validateFullName, async (req, res) => {
   /* 
       #swagger.tags = ['Users']
       #swagger.summary = 'Update user details'
@@ -125,18 +128,26 @@ router.put("/edit", async (req, res) => {
               "message": "User updated successfully"
             }
       }
-      #swagger.responses[404] = {
+      #swagger.responses[400] = {
             description: 'Bad Request',
+            schema: {
+              "message": "email is required"
+            }
+      }
+      #swagger.responses[404] = {
+            description: 'Not found',
             schema: {
               "message": "User not found"
             }
       }
       #swagger.responses[500] = {
             description: 'Internal Server Error',
+            schema: {
+              "message": "Internal Server Error"
+            }
       }
   */
   try {
-    console.log("PUT" + JSON.stringify(req.body));
     const reqObj = { email: req.body.email };
     const user = await User.findOne(reqObj);
     if (!user) {
@@ -145,10 +156,9 @@ router.put("/edit", async (req, res) => {
     const updatedUser = await User.findOneAndUpdate(reqObj, req.body, {
       new: true,
     });
-    console.log("PUT completed " + updatedUser);
     res.status(200).json({ message: "User updated successfully" });
   } catch (error) {
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ message: error.message || "Internal Server Error"});
   }
 });
 
@@ -171,11 +181,20 @@ router.delete("/delete", async (req, res) => {
       #swagger.responses[400] = {
             description: 'Bad Request',
             schema: {
+              "message": "EmailId is required"
+            }
+      }
+      #swagger.responses[404] = {
+            description: 'Not found',
+            schema: {
               "message": "User not found"
             }
       }
       #swagger.responses[500] = {
             description: 'Internal Server Error',
+            schema: {
+              "message": "Internal Server Error"
+            }
       }
   */
   try {
@@ -191,7 +210,7 @@ router.delete("/delete", async (req, res) => {
     await User.deleteOne(reqObj);
     res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ message: error.message || "Internal Server Error"});
   }
 });
 
@@ -259,11 +278,17 @@ router.post("/uploadImage", async function (req, res) {
             schema: {
               "message": "Image File type not supported! Only image/jpeg, image/gif and image/png is supported"
             }
+      }
+      #swagger.responses[404] = {
+            description: 'Not found',
+            schema: {
+              "message": "User not found"
+            }
       } 
       #swagger.responses[500] = {
             description: 'Internal Server Error',
             schema: {
-              "message": "error message"
+              "message": "Internal Server Error"
             }
       } 
   */
@@ -283,7 +308,7 @@ router.post("/uploadImage", async function (req, res) {
       });
     });
   } catch (error) {
-    res.status(500).json({ message: err });
+    res.status(500).json({ message: error.message || "Internal Server Error"});
   }
 });
 
