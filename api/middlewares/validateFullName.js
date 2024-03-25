@@ -6,4 +6,4 @@ const validateFullName = (req, res, next) => {
     next(); 
 };
 
-module.exports = validateFullName;
+export default validateFullName;

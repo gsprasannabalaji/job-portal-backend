@@ -10,4 +10,4 @@ const validateEmail = (req, res, next) => {
     next(); 
 };
 
-module.exports = validateEmail;
+export default validateEmail;
