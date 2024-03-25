@@ -43,7 +43,6 @@ export const createUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   try {
     await userDetailsService.update(req, res);
-    console.log("test before return");
     return setResponse(
       {
         status: 200,

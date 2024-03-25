@@ -23,7 +23,6 @@ export const create = async (req, res) => {
     email: email,
     password: hashedPassword,
   });
-  console.log("print before save");
   await user.save();
 };
 
