@@ -155,7 +155,8 @@ export const login = async (req, res) => {
         status: 200,
         result: {
           isUserValid: data?.isUserValid,
-          fullName: data?.fullName
+          fullName: data?.fullName,
+          userToken: data?.userToken
         },
       },
       res

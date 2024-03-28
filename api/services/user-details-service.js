@@ -2,6 +2,7 @@ import User from "../models/user-details.js";
 import bcrypt from "bcrypt";
 import multer from "multer";
 import fs from "fs";
+import jwt from "jsonwebtoken";
 
 export const search = async (params, options) => {
   const userDetails = await User.find(params, options).exec();
@@ -182,8 +183,10 @@ export const login = async (req, res) => {
         JSON.stringify({ status: 400, message: "Invalid password", isUserValid: false })
       );
   }
+  const token = jwt.sign({ userId: user?._id }, process.env.JWT_SECRET_KEY, { expiresIn: '2m' });
   return {
     isUserValid: isMatch,
-    fullName: user?.fullName
+    fullName: user?.fullName,
+    userToken: token
   };
 }

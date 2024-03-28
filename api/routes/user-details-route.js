@@ -4,6 +4,7 @@ import * as userDetailsController from "../controllers/user-details-controller.j
 import validateEmail from "../middlewares/validateEmail.js";
 import validatePassword from "../middlewares/validatePassword.js";
 import validateFullName from "../middlewares/validateFullName.js";
+import authenticateToken from "../middlewares/authenticateToken.js";
 
 const router = express.Router();
 
@@ -31,7 +32,7 @@ router.route("/delete").delete(userDetailsController.deleteUser);
 
 router.route("/uploadImage").post(userDetailsController.uploadImage);
 
-router.route("/getImage/:email").get(userDetailsController.getImage);
+router.route("/getImage/:email").get(authenticateToken, userDetailsController.getImage);
 
 router.route('/login').post(validateEmail, validatePassword, userDetailsController.login);
 
