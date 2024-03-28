@@ -6,7 +6,7 @@ const authenticateToken = (req, res, next) => {
     if(token == null) return res.status(401).json({ message: 'User is unauthorized' });
 
     jwt.verify(token, process.env.JWT_SECRET_KEY, (err) => {
-        if(err) return res.status(403).json({ message: 'Forbidden Error' });
+        if(err) return res.status(403).json({ message: 'Session is Expired! Please login again.' });
         next();
     })
 };

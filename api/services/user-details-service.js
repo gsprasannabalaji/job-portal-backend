@@ -183,7 +183,7 @@ export const login = async (req, res) => {
         JSON.stringify({ status: 400, message: "Invalid password", isUserValid: false })
       );
   }
-  const token = jwt.sign({ userId: user?._id }, process.env.JWT_SECRET_KEY, { expiresIn: '2m' });
+  const token = jwt.sign({ userId: user?._id }, process.env.JWT_SECRET_KEY, { expiresIn: '10s' });
   return {
     isUserValid: isMatch,
     fullName: user?.fullName,
