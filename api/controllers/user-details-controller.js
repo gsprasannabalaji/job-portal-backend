@@ -146,3 +146,32 @@ export const getImage = async (req, res) => {
     }
   }
 };
+
+export const login = async (req, res) => {
+  try {
+    const data = await userDetailsService.login(req, res);
+    setResponse(
+      {
+        status: 200,
+        result: {
+          isUserValid: data?.isUserValid,
+          fullName: data?.fullName
+        },
+      },
+      res
+    );
+  } catch (error) {
+    if(typeof {} == 'object') {
+        const parsedError = JSON.parse(error.message);
+        setError(
+          { status: parsedError.status, message: parsedError.message, isUserValid: parsedError.isUserValid },
+          res
+        );
+    } else {
+        setError(
+            { status: 500, message: error.message || "Internal Server Error" },
+            res
+          );
+    }
+  }
+}

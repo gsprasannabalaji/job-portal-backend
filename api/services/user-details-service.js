@@ -167,3 +167,23 @@ export const getImage = async (req, res) => {
           );
     }
 }
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email: email });
+  if (!user) {
+    throw new Error(
+        JSON.stringify({ status: 400, message: "User not found" })
+      );
+  }
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    throw new Error(
+        JSON.stringify({ status: 400, message: "Invalid password", isUserValid: false })
+      );
+  }
+  return {
+    isUserValid: isMatch,
+    fullName: user?.fullName
+  };
+}

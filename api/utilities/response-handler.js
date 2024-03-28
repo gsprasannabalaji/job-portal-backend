@@ -5,8 +5,12 @@ export const setResponse = (data, response) => {
   
   export const setError = (err, response) => {
     response.status(err.status);
-    return response.json({
+    let responseObj = {
       message: err.message,
-    });
+    }
+    if(err["isUserValid"]!= undefined) {
+      responseObj.isUserValid= err?.isUserValid;
+    }
+    return response.json(responseObj);
   };
   

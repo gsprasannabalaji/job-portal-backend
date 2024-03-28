@@ -33,4 +33,6 @@ router.route("/uploadImage").post(userDetailsController.uploadImage);
 
 router.route("/getImage/:email").get(userDetailsController.getImage);
 
+router.route('/login').post(validateEmail, validatePassword, userDetailsController.login);
+
 export default router;
