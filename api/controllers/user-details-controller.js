@@ -364,7 +364,7 @@ export const login = async (req, res) => {
     /* 
       #swagger.tags = ['Users']
       #swagger.summary = 'User Login'
-      #swagger.description = 'Authenticate user credentials and generate JWT token if valid.'
+      #swagger.description = 'Authenticate user credentials and generate JWT token if valid and set the cookie'
       #swagger.parameters['body'] = {
           in: 'body', 
           required: true,

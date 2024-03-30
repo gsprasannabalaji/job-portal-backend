@@ -17,12 +17,21 @@
 
 ## Screenshot of Swagger Documentation
 
-<img width="738" alt="image" src="https://github.com/gsprasannabalaji/User-CRUD-API/assets/156258497/3ad0f5c8-78ef-4b78-a6f1-1e424f2a989b">
+![alt text](docs/image.png)
 
 ## Endpoints routes
 
 - /user/getAll
+    - Gets a list of all users, including their full names, email addresses, and hashed passwords.
 - /user/create
+    - Creates a new user with full name, email, and password. Includes validation for email and enforces strong password rules.
 - /user/edit
+    - Updates an existing user\'s full name and password based on the provided email. Email cannot be updated.
 - /user/delete
+    - Deletes a user by email.
 - /user/uploadImage
+    - Uploads an image for a user and stores the image path in the database.
+- /user/getImage/{email}
+    - Gets a list of images for the respective user
+- /user/login
+    - Authenticate user credentials and generate JWT token if valid and set the cookie
