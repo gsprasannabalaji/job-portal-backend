@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import path from "path";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
+import cookieParser from "cookie-parser";
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const swaggerFile = require("../swagger-output.json");
@@ -11,7 +12,8 @@ const swaggerFile = require("../swagger-output.json");
 const initialize = (app) => {
     app.use(express.json());
     app.use(express.urlencoded());
-    app.use(cors());
+    app.use(cors({ origin: true, credentials: true }));
+    app.use(cookieParser());
     const __dirname = path.dirname(new URL(import.meta.url).pathname);
     app.use('/api/images', express.static(path.join(__dirname, "./images")));
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));

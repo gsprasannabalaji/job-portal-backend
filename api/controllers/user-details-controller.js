@@ -406,7 +406,6 @@ export const login = async (req, res) => {
         result: {
           isUserValid: data?.isUserValid,
           fullName: data?.fullName,
-          userToken: data?.userToken,
         },
       },
       res
@@ -430,3 +429,15 @@ export const login = async (req, res) => {
     }
   }
 };
+
+export const clearCookies = async (req, res) => {
+  try {
+    const result = await userDetailsService.clearCookies(req, res);
+    setResponse({ status: 200, result }, res);
+  } catch (error) {
+    setError(
+      { status: 500, message: error.message || "Internal Server Error" },
+      res
+    );
+  }
+}

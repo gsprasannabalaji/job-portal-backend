@@ -183,10 +183,15 @@ export const login = async (req, res) => {
         JSON?.stringify({ status: 400, message: "Invalid password", isUserValid: false })
       );
   }
-  const token = jwt?.sign({ userId: user?._id }, process.env.JWT_SECRET_KEY, { expiresIn: '10m' });
+  const token = jwt?.sign({ fullName: user?.fullName, email: user?.email }, process.env.JWT_SECRET_KEY, { expiresIn: '10m' });
+  res.cookie('user-creds', token, { httpOnly: true });
   return {
     isUserValid: isMatch,
     fullName: user?.fullName,
-    userToken: token
   };
+}
+
+export const clearCookies = async (req, res) => {
+  res.clearCookie('user-creds');
+  return { message: 'cleared the data' };
 }
