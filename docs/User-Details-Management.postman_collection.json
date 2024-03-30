@@ -141,6 +141,22 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "getImage",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
 		}
 	]
 }
