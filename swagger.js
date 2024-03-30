@@ -1,4 +1,4 @@
-const swaggerAutogen  = require('swagger-autogen');
+import swaggerAutogen from 'swagger-autogen';
 
 const doc = {
   info : {
@@ -10,8 +10,8 @@ const doc = {
 }
 
 const outputFile = './swagger-output.json';
-const routes = ['./app.js','./model/*.js'];
+const routes = ['./api/routes/index.js', './api/model/*.js'];
 
-swaggerAutogen(outputFile, routes, doc).then(() => {
-  require('./app.js'); // Your project's root file
+swaggerAutogen(outputFile, routes, doc).then(async() => {
+  await import('./server.js');
 });

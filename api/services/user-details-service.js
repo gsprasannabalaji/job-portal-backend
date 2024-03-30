@@ -180,10 +180,10 @@ export const login = async (req, res) => {
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
     throw new Error(
-        JSON.stringify({ status: 400, message: "Invalid password", isUserValid: false })
+        JSON?.stringify({ status: 400, message: "Invalid password", isUserValid: false })
       );
   }
-  const token = jwt.sign({ userId: user?._id }, process.env.JWT_SECRET_KEY, { expiresIn: '10s' });
+  const token = jwt?.sign({ userId: user?._id }, process.env.JWT_SECRET_KEY, { expiresIn: '10m' });
   return {
     isUserValid: isMatch,
     fullName: user?.fullName,
