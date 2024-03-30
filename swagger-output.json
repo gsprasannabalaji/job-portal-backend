@@ -565,10 +565,6 @@
                 "fullName": {
                   "type": "string",
                   "example": "Jane Doe"
-                },
-                "userToken": {
-                  "type": "string",
-                  "example": "e32snfsoue2wrwlj32ou2432loi32n42jsouful23r3"
                 }
               },
               "xml": {

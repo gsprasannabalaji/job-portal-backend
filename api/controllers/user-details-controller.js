@@ -382,7 +382,6 @@ export const login = async (req, res) => {
         schema: {
           isUserValid: true,
           fullName: "Jane Doe",
-          userToken: "e32snfsoue2wrwlj32ou2432loi32n42jsouful23r3"
         } 
       }
       #swagger.responses[400] = {
@@ -431,6 +430,7 @@ export const login = async (req, res) => {
 };
 
 export const clearCookies = async (req, res) => {
+  // #swagger.ignore = true
   try {
     const result = await userDetailsService.clearCookies(req, res);
     setResponse({ status: 200, result }, res);

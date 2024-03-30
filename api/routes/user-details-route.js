@@ -36,6 +36,7 @@ router.route("/getImage/:email").get(authenticateToken, userDetailsController.ge
 
 router.route('/login').post(validateEmail, validatePassword, userDetailsController.login);
 
+// #swagger.ignore = true
 router.route('/clearCookies').get(userDetailsController.clearCookies);
 
 export default router;
