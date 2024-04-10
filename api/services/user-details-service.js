@@ -10,11 +10,17 @@ export const search = async (params, options) => {
 };
 
 export const create = async (req, res) => {
-  const { fullName, email, password } = req.body;
+  const { fullName, email, password, type } = req.body;
   const existingUser = await User.findOne({ email: email });
   if (existingUser) {
     throw new Error(
         JSON.stringify({ status: 400, message: "User with this email already exists" })
+    );
+  }
+
+  if (!type || (type !== "employee" && type !== "admin")) {
+    throw new Error(
+      JSON.stringify({ status: 400, message: "Type must be either 'employee' or 'admin'" })
     );
   }
 
@@ -23,6 +29,7 @@ export const create = async (req, res) => {
     fullName: fullName,
     email: email,
     password: hashedPassword,
+    type: type,
   });
   await user.save();
 };
@@ -171,23 +178,24 @@ export const getImage = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email: email });
+  const user = await User?.findOne({ email: email });
   if (!user) {
     throw new Error(
         JSON.stringify({ status: 400, message: "User not found" })
       );
   }
-  const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcrypt?.compare(password, user?.password);
   if (!isMatch) {
     throw new Error(
         JSON?.stringify({ status: 400, message: "Invalid password", isUserValid: false })
       );
   }
-  const token = jwt?.sign({ fullName: user?.fullName, email: user?.email }, process.env.JWT_SECRET_KEY, { expiresIn: '10m' });
+  const token = jwt?.sign({ fullName: user?.fullName, email: user?.email, role: user?.type }, process.env.JWT_SECRET_KEY, { expiresIn: '10m' });
   res.cookie('user-creds', token, { httpOnly: true });
   return {
     isUserValid: isMatch,
     fullName: user?.fullName,
+    role: user?.type
   };
 }
 

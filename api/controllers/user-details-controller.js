@@ -24,7 +24,7 @@ export const getUser = async (req, res) => {
       } 
   */
   try {
-    const result = await userDetailsService.search({}, { images: 0 });
+    const result = await userDetailsService.search({}, { images: 0, password: 0 });
     setResponse({ status: 200, result }, res);
   } catch (error) {
     setError(
@@ -405,6 +405,7 @@ export const login = async (req, res) => {
         result: {
           isUserValid: data?.isUserValid,
           fullName: data?.fullName,
+          role: data?.role,
         },
       },
       res
