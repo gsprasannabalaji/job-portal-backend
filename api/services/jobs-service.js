@@ -18,6 +18,6 @@ export const create = async (req, res) => {
 };
 
 export const search = async (params, options) => {
-    const jobs = await Jobs.find(params, options).exec();
+    const jobs = await Jobs?.find(params, options)?.sort({ lastUpdated: -1 })?.exec();
     return jobs;
   };
